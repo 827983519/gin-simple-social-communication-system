@@ -1,0 +1,9 @@
+.idea/
+.DS_Store
+*.dll
+*.so
+*.out
+bin
+logs
+log
+!.gitkeep
