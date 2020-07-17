@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package grpc.user;
+
+service UserService {
+    rpc GetUserInfo (UserInfoRequest) returns (UserInfoResponse);
+    rpc ViewOtherUserInfo(ViewOtherUserInfoRequest) returns (ViewOtherUserInfoResponse);
+    rpc GetUserFollowList(UserFollowListRequest) returns (UserFollowListResponse);
+}
+
+
+message RetCodeResponse{
+    int32 Errorcode = 1;
+    string message = 2;
+}
+
+message UserInfoRequest {
+      int32  user_id = 1;
+}
+
+message UserInfoResponse {
+      int32  id = 1;
+      string image = 2;
+      string username = 3;
+      string nickname = 4;
+      string email = 5;
+      int32 attention = 6;
+      int32 status = 7;
+      RetCodeResponse retcode = 8;
+}
+
+
+message ViewOtherUserInfoRequest {
+      int32  user_id = 1;
+      int32  view_by = 2;
+}
+
+message ViewOtherUserInfoResponse {
+      int32  id = 1;
+      string image = 2;
+      string nickname = 4;
+      int32 attention = 6;
+      int32 follow_status = 7;
+      RetCodeResponse retcode = 8;
+}
+
+message FollowList{
+    string nickname = 1;
+    string image = 2;
+    int32 attention = 3;
+}
+
+
+
+message UserFollowListRequest {
+      int32  user_id = 1;
+      int32  pageno = 2;
+      int32  count = 3;
+}
+
+message UserFollowListResponse {
+    int32  total = 1;
+    int32  count = 2;
+    int32  pageno = 3;
+    repeated FollowList followlist = 4;
+    RetCodeResponse retcode = 8;
+}
+
+
+

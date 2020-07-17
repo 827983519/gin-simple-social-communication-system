@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package grpc.follow;
+
+service FollowService {
+    rpc FollowUser (FollowRequest) returns (FollowResponse);
+    rpc GetOffUser (FollowRequest) returns (FollowResponse);
+}
+
+message FollowRequest {
+      int32  user_id = 1;
+      int32  follow_by = 2;
+}
+
+message FollowResponse {
+
+}
+
+
+
