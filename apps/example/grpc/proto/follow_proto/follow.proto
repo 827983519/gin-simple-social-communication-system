@@ -5,7 +5,6 @@ package grpc.follow;
 service FollowService {
     rpc FollowUser (FollowRequest) returns (FollowResponse);
     rpc GetOffUser (FollowRequest) returns (FollowResponse);
-    rpc GetUser
 }
 
 
