@@ -13,8 +13,7 @@ func Search_user_follow_list(follow_by int32, count int32, pageno int32) ([]mode
 	var user_data []model.UserTab
 	var total int32
 
-
-	DBagent.DB.Select("count(*)").Where("follow_by = ?", follow_by).Count(&total)
+	DBagent.DB.Table("follow_tab").Where( "follow_by = ?",follow_by).Count(&total)
 	Db := DBagent.DB.Where("follow_by = ?", follow_by)
 	if count > 0 && pageno > 0 {
 		Db = Db.Limit(count).Offset((pageno - 1) * count)

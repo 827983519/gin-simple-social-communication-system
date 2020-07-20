@@ -1,10 +1,12 @@
 package Validator
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 
 func Check(c *gin.Context, validatorForm interface{}) (interface{}, error){
-	err := c.ShouldBindJSON(&validatorForm)
+	err := c.Bind(&validatorForm)
 	return validatorForm, err
 }
 
@@ -20,13 +22,13 @@ type GetOtherUserForm struct {
 
 func CheckGetUserForm(c *gin.Context) (GetUserForm, error) {
 	var validateForm GetUserForm
-	err := c.ShouldBindJSON(&validateForm)
+	err := c.Bind(&validateForm)
 	return validateForm, err
 }
 
 func CheckGetOtherUserForm(c *gin.Context) (GetOtherUserForm, error) {
 	var validateForm GetOtherUserForm
-	err := c.ShouldBindJSON(&validateForm)
+	err := c.Bind(&validateForm)
 	return validateForm, err
 }
 

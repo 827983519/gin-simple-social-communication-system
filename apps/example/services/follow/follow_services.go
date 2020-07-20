@@ -18,12 +18,13 @@ func Follow_user(c *gin.Context)  {
 	data, err := Validator.Check(c, &Validator.FollowForm{})
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		return
 	}
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
-
+		return
 	}
 	defer conn.Close()
 	client := grpc_follow.NewFollowServiceClient(conn)
@@ -36,10 +37,10 @@ func Follow_user(c *gin.Context)  {
 
 	if res.Retcode != nil {
 		response.Response_data(c, gin.H{}, res.Retcode.Errorcode, res.Retcode.Message)
+		return
 	}
 
 	response.Response_data(c, gin.H{}, Errorcode.OK, "")
-
 }
 
 
@@ -48,12 +49,13 @@ func Get_off_user(c *gin.Context)  {
 	data, err := Validator.Check(c, &Validator.FollowForm{})
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		return
 	}
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
-
+		return
 	}
 	defer conn.Close()
 	client := grpc_follow.NewFollowServiceClient(conn)
@@ -66,6 +68,7 @@ func Get_off_user(c *gin.Context)  {
 
 	if res.Retcode != nil {
 		response.Response_data(c, gin.H{}, res.Retcode.Errorcode, res.Retcode.Message)
+		return
 	}
 
 	response.Response_data(c, gin.H{}, Errorcode.OK, "")

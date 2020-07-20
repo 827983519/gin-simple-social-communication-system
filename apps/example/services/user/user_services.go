@@ -20,12 +20,13 @@ const (
 func Get_user_info(c *gin.Context) {
 	data, err := Validator.CheckGetUserForm(c)
 	if err != nil {
-		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		response.Response_data(c, gin.H{}, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		return
 	}
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
-
+		response.Response_data(c, gin.H{}, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
+		return
 	}
 	defer conn.Close()
 	client := grpc_user.NewUserServiceClient(conn)
@@ -51,11 +52,12 @@ func Get_user_follow_list(c *gin.Context) {
 	data, err := Validator.CheckGetUserForm(c)
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		return
 	}
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
-
+		return
 	}
 	defer conn.Close()
 	client := grpc_user.NewUserServiceClient(conn)
@@ -66,11 +68,17 @@ func Get_user_follow_list(c *gin.Context) {
 		return
 	}
 
+	var followList []*grpc_user.FollowList
+	if len(r.Followlist) == 0 {
+		followList = []*grpc_user.FollowList{}
+	}else{
+		followList = r.Followlist
+	}
 	return_map := gin.H{
 		"count": r.Count,
 		"pageno": r.Pageno,
 		"total":  r.Total,
-		"list": r.Followlist,
+		"list":  followList,
 	}
 	response.Response_data(c, return_map, Errorcode.OK, "")
 }
@@ -80,11 +88,12 @@ func View_other_user_info(c *gin.Context) {
 	data, err := Validator.CheckGetOtherUserForm(c)
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		return
 	}
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
-
+		return
 	}
 	defer conn.Close()
 	client := grpc_user.NewUserServiceClient(conn)

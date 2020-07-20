@@ -13,4 +13,5 @@ func Response_data(c *gin.Context, data gin.H, retcode int32, message string){
 		"retcode": retcode,
 		"message": message,
 	})
+	c.Abort()
 }
