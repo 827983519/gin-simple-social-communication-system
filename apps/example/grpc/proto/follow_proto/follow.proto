@@ -5,6 +5,13 @@ package grpc.follow;
 service FollowService {
     rpc FollowUser (FollowRequest) returns (FollowResponse);
     rpc GetOffUser (FollowRequest) returns (FollowResponse);
+    rpc GetUser
+}
+
+
+message RetCodeResponse{
+    int32 Errorcode = 1;
+    string message = 2;
 }
 
 message FollowRequest {
@@ -13,7 +20,7 @@ message FollowRequest {
 }
 
 message FollowResponse {
-
+    RetCodeResponse retcode = 1;
 }
 
 

@@ -1,4 +1,4 @@
-package login
+package login_services
 
 import (
 	"github.com/gin-gonic/gin"
