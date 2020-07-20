@@ -5,6 +5,7 @@ import (
 	"sbs-entrytask-template/apps/example/model"
 	"sbs-entrytask-template/agent/db"
 	"sbs-entrytask-template/libs/error"
+	"time"
 )
 
 
@@ -36,6 +37,7 @@ func Increase_attention(user_id int32) *Error.APIException{
 		return err
 	}
 	user_info.Attention += 1
+	user_info.Mtime = time.Now().Unix()
 
 	save_err := DBagent.DB.Save(&user_info).Error
 
@@ -53,6 +55,7 @@ func Decrease_attention(user_id int32) *Error.APIException{
 		return err
 	}
 	user_info.Attention -= 1
+	user_info.Mtime = time.Now().Unix()
 
 	save_err := DBagent.DB.Save(&user_info).Error
 

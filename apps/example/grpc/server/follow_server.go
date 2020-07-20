@@ -4,16 +4,30 @@ import (
 	"golang.org/x/net/context"
 	"sbs-entrytask-template/apps/example/grpc/proto/follow_proto"
 	"sbs-entrytask-template/apps/example/repository/follow"
-	Error "sbs-entrytask-template/libs/error"
+	"sbs-entrytask-template/libs/response/Errorcode"
 )
 
-type FollowServer struct{}
+type FollowServer struct{
+	grpc_follow.FollowServiceServer
+}
 
 
 
-func (f *FollowServer) FollowUser(ctx context.CancelFunc, req *grpc_follow.FollowRequest) (*grpc_follow.FollowResponse, *Error.APIException) {
+func (f *FollowServer) FollowUser(ctx context.Context, req *grpc_follow.FollowRequest) (*grpc_follow.FollowResponse, error) {
 	user_id := req.UserId
 	follow_by := req.FollowBy
+
+	follow_record, _ := follow_db.Search_follow_record(user_id, follow_by)
+	if follow_record != nil {
+		res := &grpc_follow.FollowResponse{
+			Retcode:  &grpc_follow.RetCodeResponse{
+				Errorcode: Errorcode.ALREADY_EXIST,
+				Message:   "Already follow user.",
+			},
+		}
+		return res, nil
+	}
+
 	err := follow_db.Follow_user(user_id, follow_by)
 	if err != nil {
 		res := &grpc_follow.FollowResponse{
@@ -31,18 +45,22 @@ func (f *FollowServer) FollowUser(ctx context.CancelFunc, req *grpc_follow.Follo
 }
 
 
-func (f *FollowServer) GetOffUser(ctx context.CancelFunc, req *grpc_follow.FollowRequest) (*grpc_follow.FollowResponse, *Error.APIException) {
+func (f *FollowServer) GetOffUser(ctx context.Context, req *grpc_follow.FollowRequest) (*grpc_follow.FollowResponse, error) {
 	user_id := req.UserId
 	follow_by := req.FollowBy
-	err := follow_db.Get_off_user(user_id, follow_by)
-	if err != nil {
-		res := &grpc_follow.FollowResponse{
-			Retcode:  &grpc_follow.RetCodeResponse{
-				Errorcode: err.Errorcode,
-				Message:   err.Message,
-			},
+
+	follow_record, _ := follow_db.Search_follow_record(user_id, follow_by)
+	if follow_record != nil {
+		err := follow_db.Get_off_user(user_id, follow_by)
+		if err != nil {
+			res := &grpc_follow.FollowResponse{
+				Retcode: &grpc_follow.RetCodeResponse{
+					Errorcode: err.Errorcode,
+					Message:   err.Message,
+				},
+			}
+			return res, nil
 		}
-		return res, nil
 	}
 	res := &grpc_follow.FollowResponse{
 		Retcode: nil,

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	DBagent "sbs-entrytask-template/agent/db"
+	grpc_follow "sbs-entrytask-template/apps/example/grpc/proto/follow_proto"
 	_ "sbs-entrytask-template/apps/example/grpc/proto/follow_proto"
 	"sbs-entrytask-template/apps/example/grpc/proto/user_proto"
 	"sbs-entrytask-template/apps/example/grpc/server"
@@ -30,7 +31,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	grpc_user.RegisterUserServiceServer(s, &server.UserServer{})
-	//grpc_follow.RegisterFollowServiceServer(s, &server{grpc_user.UserServiceServer})
+	grpc_follow.RegisterFollowServiceServer(s, &server.FollowServer{})
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {

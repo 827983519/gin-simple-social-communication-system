@@ -10,8 +10,8 @@ type (
 		Status       int32 `json:"status"`
 		Attention    int32	`json:"attention"`
 		Email 		 string	`json:"email"`
-		Ctime        int32	`json:"ctime"`
-		Mtime   	 int32	`json:"mtime"`
+		Ctime        int64	`json:"ctime"`
+		Mtime   	 int64	`json:"mtime"`
 	}
 )
 

@@ -10,7 +10,7 @@ type LoginForm struct {
 
 func CheckLoginForm(c *gin.Context) (LoginForm, error) {
 	var validateForm LoginForm
-	err := c.ShouldBindJSON(&validateForm)
+	err := c.Bind(&validateForm)
 	return validateForm, err
 }
 

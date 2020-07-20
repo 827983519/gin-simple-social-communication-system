@@ -26,8 +26,8 @@ func SetupRouter() *gin.Engine {
 
 	v3 := r.Group("follow")
 	{
-		v3.GET("/create", follow_services.Follow_user)
-		v3.GET("/delete", follow_services.Get_off_user)
+		v3.POST("/create", follow_services.Follow_user)
+		v3.POST("/delete", follow_services.Get_off_user)
 	}
 
 	return r

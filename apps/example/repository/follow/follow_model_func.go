@@ -5,6 +5,7 @@ import (
 	"sbs-entrytask-template/apps/example/model"
 	"sbs-entrytask-template/apps/example/repository/user"
 	"sbs-entrytask-template/libs/error"
+	"time"
 )
 
 
@@ -44,6 +45,7 @@ func Create(user_id int32, follow_by int32) *Error.APIException{
 	follow := model.FollowTab{
 		UserId:   user_id,
 		FollowBy: follow_by,
+		Ctime:     time.Now().Unix(),
 	}
 	err := DBagent.DB.Create(&follow).Error
 

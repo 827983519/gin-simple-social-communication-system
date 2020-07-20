@@ -15,25 +15,22 @@ const (
 )
 
 func Follow_user(c *gin.Context)  {
-	data, err := Validator.Check(c, &Validator.FollowForm{})
+	data, err := Validator.CheckFollowForm(c)
 	if err != nil {
-		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		response.Response_data(c, gin.H{}, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
 		return
 	}
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
+		response.Response_data(c, gin.H{}, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
 		return
 	}
 	defer conn.Close()
+
 	client := grpc_follow.NewFollowServiceClient(conn)
 
-	this_data := data.(Validator.FollowForm)
-	res, _ := client.FollowUser(context.Background(), &grpc_follow.FollowRequest{
-		UserId: this_data.UserId,
-		FollowBy: this_data.FollowBy,
-	})
+	res, _ := client.FollowUser(context.Background(), &grpc_follow.FollowRequest{UserId: data.UserId, FollowBy: data.FollowBy})
 
 	if res.Retcode != nil {
 		response.Response_data(c, gin.H{}, res.Retcode.Errorcode, res.Retcode.Message)
@@ -44,26 +41,24 @@ func Follow_user(c *gin.Context)  {
 }
 
 
-
 func Get_off_user(c *gin.Context)  {
-	data, err := Validator.Check(c, &Validator.FollowForm{})
+	data, err := Validator.CheckFollowForm(c)
 	if err != nil {
-		response.Response_data(c, nil, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
+		response.Response_data(c, gin.H{}, Errorcode.PARAMS_VALIDATE_WRONG, "Parameter verification failed.")
 		return
 	}
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		response.Response_data(c, nil, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
+		response.Response_data(c, gin.H{}, Errorcode.CONNECT_GRPC_FAILED, "Cannot connect grpc sever.")
 		return
 	}
 	defer conn.Close()
 	client := grpc_follow.NewFollowServiceClient(conn)
 
-	this_data := data.(Validator.FollowForm)
 	res, _ := client.GetOffUser(context.Background(), &grpc_follow.FollowRequest{
-		UserId: this_data.UserId,
-		FollowBy: this_data.FollowBy,
+		UserId: data.UserId,
+		FollowBy: data.FollowBy,
 	})
 
 	if res.Retcode != nil {
